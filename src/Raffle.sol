@@ -1,3 +1,24 @@
+// Layout of Contract:
+// version
+// imports
+// errors
+// interfaces, libraries, contracts
+// Type declarations
+// State variables
+// Events
+// Modifiers
+// Functions
+
+// Layout of Functions:
+// constructor
+// receive function (if exists)
+// fallback function (if exists)
+// external
+// public
+// internal
+// private
+// view & pure functions
+
 // SPDX-License-Identifier: MIT
 
 pragma solidity 0.8.19;
@@ -106,9 +127,14 @@ contract Raffle is VRFConsumerBaseV2Plus, AutomationCompatibleInterface {
     {
         bool isOpen = RaffleState.OPEN == s_raffleState;
         bool timePassed = ((block.timestamp - s_lastTimeStamp) > i_interval);
+        bool blocknumber = block.number > 1;
         bool hasPlayers = s_players.length > 0;
         bool hasBalance = address(this).balance > 0;
-        upkeepNeeded = (timePassed && isOpen && hasBalance && hasPlayers);
+        upkeepNeeded = (timePassed &&
+            isOpen &&
+            hasBalance &&
+            blocknumber &&
+            hasPlayers);
         return (upkeepNeeded, "0x0"); // can we comment this out?
     }
 
