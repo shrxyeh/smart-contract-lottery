@@ -199,18 +199,23 @@ contract RaffleTest is Test, CodeConstants {
         raffle.performUpkeep("");
     }
 
-    function testPerformUpkeepUpdatesRaffleStateAndEmitsRequestId() public {
+    function testPerformUpkeepUpdatesRaffleStateAndEmitsRequestId()
+        public
+        raffleEntered
+    {
         // Arrange
-        vm.prank(PLAYER);
-        raffle.enterRaffle{value: raffleEntranceFee}();
-        vm.warp(block.timestamp + automationUpdateInterval + 1);
-        vm.roll(block.number + 1);
+        // vm.prank(PLAYER);
+        // raffle.enterRaffle{value: raffleEntranceFee}();
+        // vm.warp(block.timestamp + automationUpdateInterval + 1);
+        // vm.roll(block.number + 1);
 
         // Act
         vm.recordLogs();
         raffle.performUpkeep(""); // emits requestId
         Vm.Log[] memory entries = vm.getRecordedLogs();
         bytes32 requestId = entries[1].topics[1];
+        //entries[0] is alwasy vrfCoordinator
+        //topics[0] is always reserved for something else
 
         // Assert
         Raffle.RaffleState raffleState = raffle.getRaffleState();
